@@ -17,7 +17,9 @@ http.createServer(function (req, res) {
 		if (iti > 10000)
 			iti = 10000
 	}
-	var genid = new gid.genid
+
+	// Use instance ID 0-15 to construct a generator
+	var genid = new gid.genid(1)
 	var line = '{' + '"id0":"' + genid.gen() + '"'
 
 	if (iti > 1)

@@ -8,16 +8,10 @@ format.
 
 It is similar in concept to Twitter's Snowflake project. Just a lot less 
 code and more limitations. It cannot run on more than one server instance, 
-but it can handle 4096 iterations within a single millisecond with 
+but it can handle 256 iterations within a single millisecond with 
 rollover protection.
 
-Shortcomings
----------------------
-No unique instance ID due to the limitation in Javascript's handling of 
-large numbers. Even with this restriction, the timestamp will become too 
-large and cause an overflow to occur.  This will happen around the year 
-2079. If you adjust the starting epoch you could get around 69 years of 
-reliable use.
+Unique instance ID (0-15) can be used. 
 
 Licensed with the MIT license
 -----------------------------
@@ -42,10 +36,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-genid = function() {
+genid = function(id) {
 	this.m_count	= 0
 	this.counter	= 0
 	this.millisOld	= 0
+	this.id		= id
 }
 
 genid.prototype.gen = function()
@@ -59,12 +54,11 @@ genid.prototype.gen = function()
 	if (this.millisOld == millis) {
 		this.counter++
 		// Rollover protection
-		if (this.counter == 4095)
+		if (this.counter == 255)
 		{
 			protectRollover = true
 			this.counter = 0
 			setTimeout(function () {
-				console.log('rolledover')
   				arguments.callee
 			}, 1)
 		}
@@ -75,9 +69,11 @@ genid.prototype.gen = function()
 
 	if (protectRollover == false)
 	{
-		millis = millis * Math.pow(2, 12)
-		var uid = millis + this.counter
-		return uid
+        	millis = millis * Math.pow(2, 12);
+                var id2 = this.id * Math.pow(2, 8);
+                var uid = millis + id2 + this.counter;
+                return uid;
+
 	}
 }
 
