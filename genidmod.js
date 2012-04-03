@@ -11,7 +11,7 @@ code and more limitations. It cannot run on more than one server instance,
 but it can handle 256 iterations within a single millisecond with 
 rollover protection.
 
-Unique instance ID (0-15) can be used. 
+Unique instance ID (0-63) can be used. 
 
 Licensed with the MIT license
 -----------------------------
@@ -46,10 +46,9 @@ genid = function(id) {
 genid.prototype.gen = function()
 {
 	var protectRollover = false
-	// 01 Jan 2010 is the selected epoch. Use
-	// 		Date.UTC(2010,0,1)
-	// to get this number (1262304000000)
-	var millis = new Date().getTime() - 1262304000000
+	// 01 Jan 2012 is the selected epoch. Use
+	// 		Date.UTC(2012,0,1)
+	var millis = new Date().getTime() - 1325376000000
 
 	if (this.millisOld == millis) {
 		this.counter++
@@ -69,11 +68,12 @@ genid.prototype.gen = function()
 
 	if (protectRollover == false)
 	{
-        	millis = millis * Math.pow(2, 12);
+		// this use 6-bit 64 instances and 8-bit 256 counter values 
+        	millis = millis * Math.pow(2, 14);
                 var id2 = this.id * Math.pow(2, 8);
                 var uid = millis + id2 + this.counter;
-                return uid;
 
+                return uid;
 	}
 }
 

@@ -19,7 +19,7 @@ http.createServer(function (req, res) {
 	}
 
 	// Use instance ID 0-15 to construct a generator
-	var genid = new gid.genid(1)
+	var genid = new gid.genid(0)
 	var line = '{' + '"id0":"' + genid.gen() + '"'
 
 	if (iti > 1)

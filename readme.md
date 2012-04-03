@@ -10,4 +10,4 @@ but it can handle 4096 iterations within a single millisecond with
 rollover protection.
 
 ##Distributed mode
-Unique instance ID (0-15) can be used.
+Unique instance ID (0-63) can be used.
